@@ -45,10 +45,11 @@ jobs:
           name: surefire-reports
           path: target/surefire-reports/
 
-      - name: Upload carbon reports (JSON/HTML per site)
+      - name: Upload carbon reports (Dashboard + per-site JSON/HTML)
         uses: actions/upload-artifact@v4
         with:
           name: carbon-reports
           path: |
+            target/reports/index.html
             target/reports/*.json
             target/reports/*.html
