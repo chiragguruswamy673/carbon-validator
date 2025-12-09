@@ -6,6 +6,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions; // add this import
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -15,7 +16,13 @@ public class CarbonFootprintTest {
     @BeforeClass
     public void setup() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");             // required in CI
+        options.addArguments("--no-sandbox");               // avoids sandbox issues
+        options.addArguments("--disable-dev-shm-usage");    // fixes shared memory crashes
+
+        driver = new ChromeDriver(options);
     }
 
     @Test
