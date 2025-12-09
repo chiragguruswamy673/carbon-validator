@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 0 * * *" # run daily at midnight UTC
+    - cron: "0 0 * * *" # daily at midnight UTC
 
 jobs:
   test:
@@ -27,11 +27,28 @@ jobs:
           key: maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: maven-
 
-      - name: Run Carbon Footprint Tests
-        run: mvn -B clean test -DtargetUrl="https://www.demoblaze.com"
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
-      - name: Upload Test Reports
+      - name: Run Carbon Footprint Tests (multi-site)
+        run: mvn -B clean test
+
+      - name: Upload TestNG reports
         uses: actions/upload-artifact@v4
         with:
-          name: carbon-footprint-reports
+          name: surefire-reports
           path: target/surefire-reports/
+
+      - name: Upload carbon reports (JSON/HTML per site)
+        uses: actions/upload-artifact@v4
+        with:
+          name: carbon-reports
+          path: |
+            target/reports/*.json
+            target/reports/*.html

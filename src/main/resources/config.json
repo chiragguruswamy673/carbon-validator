@@ -1,0 +1,8 @@
+{
+  "defaultThresholdGrams": 2.0,
+  "domainThresholds": {
+    "demoblaze.com": 2.0,
+    "bbc.com": 3.0,
+    "ndtv.com": 2.5
+  }
+}
