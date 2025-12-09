@@ -5,8 +5,10 @@ import org.example.report.DashboardGenerator;
 import org.example.report.DashboardGenerator.SiteResult;
 import org.example.utils.CarbonCalculator;
 import org.example.utils.PerformanceUtils;
+import org.openqa.selenium.PageLoadStrategy;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import java.time.Duration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -32,8 +34,10 @@ public class CarbonFootprintTest {
 
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
+        options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
         driver = new ChromeDriver(options);
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
     }
 
     @DataProvider(name = "sites")
